@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniLang Compiler Studio</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- CodeMirror -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navigation -->
+        <header class="topbar">
+            <div class="logo-area">
+                <h1>Hello, Compiler!</h1>
+                <span class="subtitle">Interactive Lexer, Parser & Codegen</span>
+            </div>
+            <div class="controls">
+                <span id="status-message" class="status-text hidden">Ready</span>
+                <select id="sample-select" class="btn secondary">
+                    <option value="" disabled selected>Load Sample</option>
+                    <option value="sample1">1. Simple Assignment</option>
+                    <option value="sample2">2. Conditional (If-Else)</option>
+                    <option value="sample3">3. Lexical Error</option>
+                    <option value="sample4">4. Syntax Error</option>
+                </select>
+                <button id="run-btn" class="btn primary">
+                    <span class="loader hidden" id="spinner"></span>
+                    Run Compiler
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="workspace">
+            <!-- Left Pane: Editor -->
+            <section class="editor-pane">
+                <div class="pane-header">
+                    <h2>Source Code</h2>
+                </div>
+                <div class="editor-wrapper">
+                    <textarea id="code-editor"></textarea>
+                </div>
+            </section>
+
+            <!-- Right Pane: Output -->
+            <section class="output-pane">
+                <div class="pane-header">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="tokens">Tokens</button>
+                        <button class="tab-btn" data-tab="ast">AST</button>
+                        <button class="tab-btn" data-tab="tac">Intermediate Code</button>
+                        <button class="tab-btn" data-tab="symtable">Symbol Table</button>
+                        <button class="tab-btn" data-tab="errors">Errors <span id="error-badge" class="badge hidden">0</span></button>
+                    </div>
+                </div>
+                
+                <div class="tab-content">
+                    <!-- Tokens Tab -->
+                    <div id="tokens-tab" class="tab-pane active">
+                        <div id="token-stream-banner" class="phase-banner hidden">
+                            <span class="phase-label">Token Stream</span>
+                            <div id="token-stream-text" class="token-stream"></div>
+                        </div>
+                        <div class="table-container">
+                            <table id="tokens-table">
+                                <thead>
+                                    <tr>
+                                        <th>Notation</th>
+                                        <th>Token</th>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                        <th>Col</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- AST Tab -->
+                    <div id="ast-tab" class="tab-pane">
+                        <pre id="ast-output" class="json-viewer"></pre>
+                    </div>
+
+                    <!-- TAC Tab -->
+                    <div id="tac-tab" class="tab-pane">
+                        <div class="tac-container">
+                            <ol id="tac-output">
+                                <!-- Populated by JS -->
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- Symbol Table Tab -->
+                    <div id="symtable-tab" class="tab-pane">
+                        <div class="table-container">
+                            <table id="symtable-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Errors Tab -->
+                    <div id="errors-tab" class="tab-pane">
+                        <div id="errors-output" class="errors-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/mode/simple.min.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
