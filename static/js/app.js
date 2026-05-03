@@ -153,22 +153,6 @@ window.addEventListener("load", function () {
                 });
             }
 
-            // ── Phase 5: Optimized TAC ─────────────────────────────────
-            if (data.optimized_tac && data.optimized_tac.length > 0) {
-                var optTacList = document.getElementById("optimized-tac-output");
-                optTacList.innerHTML = "";
-                data.optimized_tac.forEach(function (line) {
-                    var li = document.createElement("li");
-                    if (line.match(/^L\d+:/)) {
-                        li.className = "tac-label";
-                    }
-                    li.textContent = line;
-                    optTacList.appendChild(li);
-                });
-            } else {
-                document.getElementById("optimized-tac-output").innerHTML = "<li>No optimizations applied.</li>";
-            }
-
             // ── Errors ─────────────────────────────────────────────────
             if (!data.success && data.errors && data.errors.length > 0) {
                 var errorList = document.getElementById("errors-output");
