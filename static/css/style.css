@@ -452,8 +452,85 @@ code.notation {
     font-weight: 600;
 }
 
+/* ── Educational Guide ────────────────────────────────────────── */
+.compiler-guide {
+    background-color: var(--bg-card);
+    border-radius: var(--radius-card);
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.04);
+    margin-bottom: 24px;
+}
+
+.guide-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.guide-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.guide-header p {
+    color: var(--text-muted);
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.step-card {
+    background: #f8fafc;
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    position: relative;
+    transition: transform 0.2s;
+}
+
+.step-card:hover {
+    transform: translateY(-4px);
+    border-color: #cbd5e1;
+}
+
+.step-num {
+    font-family: var(--font-code);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-bottom: 16px;
+}
+
+.step-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.step-card p {
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: #475569;
+}
+
+.step-card strong {
+    color: var(--text-main);
+}
+
 /* Responsive */
 @media (max-width: 900px) {
+    /* ... existing responsive rules ... */
     body { 
         padding: 12px; 
         overflow: auto; 

@@ -124,6 +124,31 @@
                 </div>
             </section>
         </main>
+
+        <!-- Educational Guide -->
+        <section class="compiler-guide">
+            <div class="guide-header">
+                <h2>Behind the Scenes</h2>
+                <p>Understand how MiniLang processes your code step-by-step.</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-num">01</div>
+                    <h3>Lexical Analysis</h3>
+                    <p>The <strong>Lexer</strong> scans your code character by character, grouping them into "Tokens" (like keywords, identifiers, and operators). It's like breaking a sentence into words.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">02</div>
+                    <h3>Syntax Analysis</h3>
+                    <p>The <strong>Parser</strong> takes the tokens and arranges them into an <strong>AST (Abstract Syntax Tree)</strong>. It checks if your code follows the grammatical rules of MiniLang.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">03</div>
+                    <h3>Code Generation</h3>
+                    <p>Finally, the <strong>Codegen</strong> traverses the AST and produces <strong>Intermediate Code (TAC)</strong>. This is a simplified, linear version of your code that is easier for machines to optimize.</p>
+                </div>
+            </div>
+        </section>
     </div>
 
     <!-- Scripts -->
