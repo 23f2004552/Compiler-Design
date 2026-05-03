@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Optional, Any
 
-@dataclass
+@dataclass(kw_only=True)
 class ASTNode:
     line: int = 0
     col: int = 0
