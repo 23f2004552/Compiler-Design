@@ -3,9 +3,13 @@ from typing import List, Optional, Any
 
 @dataclass
 class ASTNode:
+    line: int = 0
+    col: int = 0
+
     def to_dict(self) -> dict:
-        result = {"type": self.__class__.__name__}
+        result = {"type": self.__class__.__name__, "line": self.line, "col": self.col}
         for key, value in self.__dict__.items():
+            if key in ["line", "col"]: continue
             if isinstance(value, ASTNode):
                 result[key] = value.to_dict()
             elif isinstance(value, list):

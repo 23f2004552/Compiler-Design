@@ -135,20 +135,38 @@ window.addEventListener("load", function () {
                 document.getElementById("ast-output").textContent = data.ast_tree.join("\n");
             }
 
-            // ── Phase 3: TAC ───────────────────────────────────────────
+            // ── Phase 3: Semantic Analysis ─────────────────────────────
+            if (data.semantics) {
+                document.getElementById("semantic-text").textContent = data.semantics;
+            }
+
+            // ── Phase 4: Original TAC ──────────────────────────────────
             if (data.tac && data.tac.length > 0) {
                 var tacList = document.getElementById("tac-output");
                 data.tac.forEach(function (line) {
                     var li = document.createElement("li");
-                    // Highlight label lines differently
                     if (line.match(/^L\d+:/)) {
                         li.className = "tac-label";
-                        li.textContent = line;
-                    } else {
-                        li.textContent = line;
                     }
+                    li.textContent = line;
                     tacList.appendChild(li);
                 });
+            }
+
+            // ── Phase 5: Optimized TAC ─────────────────────────────────
+            if (data.optimized_tac && data.optimized_tac.length > 0) {
+                var optTacList = document.getElementById("optimized-tac-output");
+                optTacList.innerHTML = "";
+                data.optimized_tac.forEach(function (line) {
+                    var li = document.createElement("li");
+                    if (line.match(/^L\d+:/)) {
+                        li.className = "tac-label";
+                    }
+                    li.textContent = line;
+                    optTacList.appendChild(li);
+                });
+            } else {
+                document.getElementById("optimized-tac-output").innerHTML = "<li>No optimizations applied.</li>";
             }
 
             // ── Errors ─────────────────────────────────────────────────

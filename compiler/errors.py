@@ -13,3 +13,7 @@ class LexicalError(CompilerError):
 class SyntaxError(CompilerError):
     def __init__(self, message, line, col):
         super().__init__("Syntax", message, line, col)
+
+class SemanticError(CompilerError):
+    def __init__(self, message, line, col):
+        super().__init__("Semantic", message, line, col)

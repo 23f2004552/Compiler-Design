@@ -32,10 +32,12 @@ class Parser:
             raise SyntaxError(f"Expected '{val}', got '{self.current_token.value}'", self.current_token.line, self.current_token.col)
 
     def parse(self):
+        first_tok = self.tokens[0] if self.tokens else None
+        line, col = (first_tok.line, first_tok.col) if first_tok else (1, 1)
         statements = []
         while self.current_token is not None:
             statements.append(self.parse_statement())
-        return Program(statements=statements)
+        return Program(statements=statements, line=line, col=col)
 
     def parse_statement(self):
         if self.current_token.type == 'KEYWORD':
@@ -48,23 +50,23 @@ class Parser:
         raise SyntaxError(f"Expected statement (let, if, print), got '{self.current_token.value}'", self.current_token.line, self.current_token.col)
 
     def parse_assignment(self):
-        self.match('KEYWORD', 'let')
+        let_tok = self.match('KEYWORD', 'let')
         ident_tok = self.match('IDENTIFIER')
         self.match('OP', '=')
         expr = self.parse_expression()
         self.match('DELIM', ';')
-        return Assignment(identifier=ident_tok.value, expression=expr)
+        return Assignment(identifier=ident_tok.value, expression=expr, line=let_tok.line, col=let_tok.col)
 
     def parse_print(self):
-        self.match('KEYWORD', 'print')
+        p_tok = self.match('KEYWORD', 'print')
         self.match('DELIM', '(')
         expr = self.parse_expression()
         self.match('DELIM', ')')
         self.match('DELIM', ';')
-        return PrintStmt(expression=expr)
+        return PrintStmt(expression=expr, line=p_tok.line, col=p_tok.col)
 
     def parse_conditional(self):
-        self.match('KEYWORD', 'if')
+        if_tok = self.match('KEYWORD', 'if')
         self.match('DELIM', '(')
         cond = self.parse_condition()
         self.match('DELIM', ')')
@@ -87,13 +89,14 @@ class Parser:
             
         self.match('KEYWORD', 'end')
         
-        return Conditional(condition=cond, if_body=if_body, else_body=else_body)
+        return Conditional(condition=cond, if_body=if_body, else_body=else_body, line=if_tok.line, col=if_tok.col)
 
     def parse_condition(self):
         left = self.parse_expression()
+        line, col = left.line, left.col
         op_tok = self.match('RELOP')
         right = self.parse_expression()
-        return Condition(left=left, operator=op_tok.value, right=right)
+        return Condition(left=left, operator=op_tok.value, right=right, line=line, col=col)
 
     def parse_expression(self):
         node = self.parse_term()
@@ -101,7 +104,7 @@ class Parser:
             op_tok = self.current_token
             self.advance()
             right = self.parse_term()
-            node = BinOp(left=node, operator=op_tok.value, right=right)
+            node = BinOp(left=node, operator=op_tok.value, right=right, line=op_tok.line, col=op_tok.col)
         return node
 
     def parse_term(self):
@@ -110,18 +113,20 @@ class Parser:
             op_tok = self.current_token
             self.advance()
             right = self.parse_factor()
-            node = BinOp(left=node, operator=op_tok.value, right=right)
+            node = BinOp(left=node, operator=op_tok.value, right=right, line=op_tok.line, col=op_tok.col)
         return node
 
     def parse_factor(self):
         if self.current_token.type == 'NUMBER':
             val = self.current_token.value
+            line, col = self.current_token.line, self.current_token.col
             self.advance()
-            return Number(value=val)
+            return Number(value=val, line=line, col=col)
         elif self.current_token.type == 'IDENTIFIER':
             name = self.current_token.value
+            line, col = self.current_token.line, self.current_token.col
             self.advance()
-            return Identifier(name=name)
+            return Identifier(name=name, line=line, col=col)
         elif self.current_token.type == 'DELIM' and self.current_token.value == '(':
             self.advance()
             expr = self.parse_expression()

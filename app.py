@@ -3,6 +3,8 @@ from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from compiler.lexer import tokenize
 from compiler.parser import Parser
+from compiler.semantics import SemanticAnalyzer
+from compiler.optimizer import ConstantFolder
 from compiler.codegen import TACGenerator
 from compiler.errors import CompilerError
 
@@ -117,8 +119,10 @@ def compile_code():
         "ast": None,
         "ast_tree": [],
         "tac": [],
+        "optimized_tac": [],
         "symbol_table": [],
-        "errors": []
+        "errors": [],
+        "semantics": "Pending"
     }
 
     try:
@@ -162,10 +166,24 @@ def compile_code():
             tree_lines += ast_to_tree_lines(stmt, "", is_last)
         response["ast_tree"] = tree_lines
 
-        # Phase 3: Intermediate Code Generation
+        # Phase 3: Semantic Analysis
+        semantics = SemanticAnalyzer()
+        semantics.analyze(ast)
+        response["semantics"] = "All clear! No scope or declaration issues found."
+
+        # Phase 4: Intermediate Code Generation (Original)
         codegen = TACGenerator()
         tac = codegen.generate(ast)
         response["tac"] = tac
+
+        # Phase 5: Code Optimization
+        optimizer = ConstantFolder()
+        optimized_ast = optimizer.optimize(ast)
+        
+        # Phase 6: Optimized Code Generation
+        opt_codegen = TACGenerator()
+        opt_tac = opt_codegen.generate(optimized_ast)
+        response["optimized_tac"] = opt_tac
 
     except CompilerError as e:
         response["success"] = False
