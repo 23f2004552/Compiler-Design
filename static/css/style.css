@@ -31,17 +31,17 @@ body {
     font-family: var(--font-ui);
     background-color: var(--bg-body);
     color: var(--text-main);
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
     padding: 24px;
+    overflow-y: auto;
 }
 
 .app-container {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    flex: 1;
     gap: 24px;
     max-width: 1600px;
     margin: 0 auto;
@@ -141,7 +141,7 @@ select.btn {
     display: flex;
     flex: 1;
     gap: 24px;
-    overflow: hidden;
+    min-height: 550px;
 }
 
 .editor-pane, .output-pane {
