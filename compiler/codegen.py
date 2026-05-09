@@ -80,3 +80,9 @@ class IntermediateCodeGenerator:
 
     def visit_Identifier(self, node):
         return node.name
+
+    def visit_IntToFloat(self, node):
+        val = self.visit(node.expression)
+        temp = self.new_temp()
+        self.emit(f"{temp} = inttofloat({val})")
+        return temp

@@ -64,3 +64,7 @@ class Number(Expression):
 @dataclass
 class Identifier(Expression):
     name: str
+
+@dataclass
+class IntToFloat(Expression):
+    expression: Expression

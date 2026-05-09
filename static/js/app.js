@@ -5,7 +5,8 @@ window.addEventListener("load", function () {
         sample1: "let x = 5 + 3;\nlet y = x * 2;\nprint(y);",
         sample2: "let a = 10;\nif (a > 5) {\n    let b = a + 1;\n    print(b);\n} else {\n    print(a);\n} end",
         sample3: "let x@ = 5;       // '@' is illegal",
-        sample4: "let x = 5\nprint(x);"
+        sample4: "let x = 5\nprint(x);",
+        sample5: "let initial = 10.0;\nlet rate = 5.5;\nlet position = initial + rate * 60;\nprint(position);"
     };
 
     // ─── CodeMirror Setup ──────────────────────────────────────────────

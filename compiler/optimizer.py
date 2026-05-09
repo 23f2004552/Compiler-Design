@@ -20,15 +20,25 @@ class CodeOptimizer:
     def constant_folding(self, lines):
         optimized = []
         for line in lines:
-            match = re.match(r"^(\w+)\s*=\s*(-?\d+)\s*([\+\-\*\/])\s*(-?\d+)$", line)
+            match_cast = re.match(r"^(\w+)\s*=\s*inttofloat\((-?\d+)\)$", line)
+            if match_cast:
+                var, val = match_cast.groups()
+                optimized.append(f"{var} = {float(val)}")
+                continue
+
+            match = re.match(r"^(\w+)\s*=\s*(-?\d+(?:\.\d+)?)\s*([\+\-\*\/])\s*(-?\d+(?:\.\d+)?)$", line)
             if match:
                 var, left, op, right = match.groups()
-                left, right = int(left), int(right)
+                left, right = float(left) if '.' in left else int(left), float(right) if '.' in right else int(right)
                 res = 0
                 if op == '+': res = left + right
                 elif op == '-': res = left - right
                 elif op == '*': res = left * right
-                elif op == '/': res = left // right if right != 0 else 0
+                elif op == '/': res = left / right if right != 0 else 0
+                
+                # Format to avoid .0 if it's an int logically but keep it if float was used
+                if isinstance(res, float) and res.is_integer():
+                    res = f"{res:.1f}"
                 optimized.append(f"{var} = {res}")
             else:
                 optimized.append(line)
@@ -43,13 +53,13 @@ class CodeOptimizer:
                 optimized.append(line)
                 continue
             
-            match_const = re.match(r"^(\w+)\s*=\s*(-?\d+)$", line)
+            match_const = re.match(r"^(\w+)\s*=\s*(-?\d+(?:\.\d+)?)$", line)
             if match_const:
                 constants[match_const.group(1)] = match_const.group(2)
                 optimized.append(line)
                 continue
                 
-            match_op = re.match(r"^(\w+)\s*=\s*([a-zA-Z_]\w*|-?\d+)\s*([\+\-\*\/])\s*([a-zA-Z_]\w*|-?\d+)$", line)
+            match_op = re.match(r"^(\w+)\s*=\s*([a-zA-Z_]\w*|-?\d+(?:\.\d+)?)\s*([\+\-\*\/])\s*([a-zA-Z_]\w*|-?\d+(?:\.\d+)?)$", line)
             if match_op:
                 var, left, op, right = match_op.groups()
                 new_left = constants.get(left, left)

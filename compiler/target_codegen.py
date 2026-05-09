@@ -6,6 +6,7 @@ class TargetCodeGenerator:
         Converts TAC into simple x86-like Assembly instructions.
         """
         machine_code = []
+        float_vars = set()
         for line in tac_lines:
             # Label
             if line.endswith(":"):
@@ -26,27 +27,56 @@ class TargetCodeGenerator:
                 machine_code.append(f"JNE {label}")
                 continue
                 
+            # Int to Float Cast
+            match = re.match(r"^(\w+)\s*=\s*inttofloat\((.*)\)$", line)
+            if match:
+                res, val = match.groups()
+                float_vars.add(res)
+                machine_code.append(f"LDF R2, {val}")
+                machine_code.append(f"STF {res}, R2")
+                continue
+                
             # Binary operation: res = a op b
             match = re.match(r"^(\w+)\s*=\s*(.*?)\s+([\+\-\*\/])\s+(.*)$", line)
             if match:
                 res, left, op, right = match.groups()
-                machine_code.append(f"MOV AX, {left}")
-                if op == '+':
-                    machine_code.append(f"ADD AX, {right}")
-                elif op == '-':
-                    machine_code.append(f"SUB AX, {right}")
-                elif op == '*':
-                    machine_code.append(f"MUL AX, {right}")
-                elif op == '/':
-                    machine_code.append(f"DIV {right}") # Simplified
-                machine_code.append(f"MOV {res}, AX")
+                is_float = (left in float_vars or right in float_vars or '.' in left or '.' in right)
+                
+                if is_float:
+                    float_vars.add(res)
+                    machine_code.append(f"LDF R2, {left}")
+                    if op == '+':
+                        machine_code.append(f"ADDF R2, R2, {right}")
+                    elif op == '-':
+                        machine_code.append(f"SUBF R2, R2, {right}")
+                    elif op == '*':
+                        machine_code.append(f"MULF R2, R2, {right}")
+                    elif op == '/':
+                        machine_code.append(f"DIVF R2, R2, {right}")
+                    machine_code.append(f"STF {res}, R2")
+                else:
+                    machine_code.append(f"MOV AX, {left}")
+                    if op == '+':
+                        machine_code.append(f"ADD AX, {right}")
+                    elif op == '-':
+                        machine_code.append(f"SUB AX, {right}")
+                    elif op == '*':
+                        machine_code.append(f"MUL AX, {right}")
+                    elif op == '/':
+                        machine_code.append(f"DIV {right}") # Simplified
+                    machine_code.append(f"MOV {res}, AX")
                 continue
                 
             # Simple assignment: res = a
             match = re.match(r"^(\w+)\s*=\s*(.*)$", line)
             if match:
                 res, val = match.groups()
-                machine_code.append(f"MOV {res}, {val}")
+                if val in float_vars or '.' in val:
+                    float_vars.add(res)
+                    machine_code.append(f"LDF R2, {val}")
+                    machine_code.append(f"STF {res}, R2")
+                else:
+                    machine_code.append(f"MOV {res}, {val}")
                 continue
                 
             # Print statement
