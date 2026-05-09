@@ -5,6 +5,8 @@ from compiler.lexer import tokenize
 from compiler.parser import Parser
 from compiler.semantics import SemanticAnalyzer
 from compiler.codegen import IntermediateCodeGenerator
+from compiler.optimizer import CodeOptimizer
+from compiler.target_codegen import TargetCodeGenerator
 from compiler.errors import CompilerError
 
 app = Flask(__name__)
@@ -118,6 +120,8 @@ def compile_code():
         "ast": None,
         "ast_tree": [],
         "intermediate_code": [],
+        "optimized_code": [],
+        "machine_code": [],
         "symbol_table": [],
         "errors": [],
         "semantics": "Pending"
@@ -173,6 +177,16 @@ def compile_code():
         codegen = IntermediateCodeGenerator()
         intermediate_code = codegen.generate(ast)
         response["intermediate_code"] = intermediate_code
+
+        # Phase 5: Code Optimization
+        optimizer = CodeOptimizer()
+        optimized = optimizer.optimize(intermediate_code)
+        response["optimized_code"] = optimized
+
+        # Phase 6: Machine Code Generation (Target Code)
+        target_codegen = TargetCodeGenerator()
+        machine_code = target_codegen.generate(optimized)
+        response["machine_code"] = machine_code
 
     except CompilerError as e:
         response["success"] = False

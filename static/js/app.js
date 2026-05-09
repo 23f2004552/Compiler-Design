@@ -92,6 +92,8 @@ window.addEventListener("load", function () {
             document.querySelector("#symtable-table tbody").innerHTML = "";
             document.getElementById("ast-output").textContent = "";
             document.getElementById("intermediate-code-output").innerHTML = "";
+            document.getElementById("optimized-code-output").innerHTML = "";
+            document.getElementById("machine-code-output").innerHTML = "";
             document.getElementById("errors-output").innerHTML = "";
             document.getElementById("error-badge").classList.add("hidden");
             document.getElementById("token-stream-banner").classList.add("hidden");
@@ -150,6 +152,37 @@ window.addEventListener("load", function () {
                     }
                     li.textContent = line;
                     icList.appendChild(li);
+                });
+            }
+
+            // ── Phase 5: Optimized Code ──────────────────────────────────────
+            if (data.optimized_code && data.optimized_code.length > 0) {
+                var optList = document.getElementById("optimized-code-output");
+                data.optimized_code.forEach(function (line) {
+                    var li = document.createElement("li");
+                    if (line.match(/^L\d+:/)) {
+                        li.className = "intermediate-code-label";
+                    }
+                    li.textContent = line;
+                    optList.appendChild(li);
+                });
+            }
+
+            // ── Phase 6: Machine Code ────────────────────────────────────────
+            if (data.machine_code && data.machine_code.length > 0) {
+                var mcList = document.getElementById("machine-code-output");
+                data.machine_code.forEach(function (line) {
+                    var li = document.createElement("li");
+                    if (line.match(/^JMP|^CMP|^JNE|^JEQ/)) {
+                        li.style.color = "#d97706";
+                    } else if (line.match(/^MOV|^ADD|^SUB|^MUL|^DIV/)) {
+                        li.style.color = "#2563eb";
+                    }
+                    if (line.match(/^L\d+:/)) {
+                        li.className = "intermediate-code-label";
+                    }
+                    li.textContent = line;
+                    mcList.appendChild(li);
                 });
             }
 

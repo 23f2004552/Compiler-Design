@@ -56,6 +56,8 @@
                         <button class="tab-btn" data-tab="symtable">Symbol Table</button>
                         <button class="tab-btn" data-tab="semantic">Semantic</button>
                         <button class="tab-btn" data-tab="intermediate-code">Intermediate Code</button>
+                        <button class="tab-btn" data-tab="optimized-code">Optimized</button>
+                        <button class="tab-btn" data-tab="machine-code">Machine Code</button>
                         <button class="tab-btn" data-tab="errors">Errors <span id="error-badge" class="badge hidden">0</span></button>
                     </div>
                 </div>
@@ -161,7 +163,17 @@
                 <div class="step-card">
                     <div class="step-num">04</div>
                     <h3>Code Generation</h3>
-                    <p>Finally, the <strong>Codegen</strong> produces <strong>Intermediate Code</strong>. This is a simplified version of your code that is ready to be turned into machine instructions.</p>
+                    <p>The <strong>Codegen</strong> produces <strong>Intermediate Code</strong>. This is a simplified version of your code.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">05</div>
+                    <h3>Code Optimization</h3>
+                    <p>The <strong>Optimizer</strong> improves the intermediate code by performing constant folding and removing unnecessary operations.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">06</div>
+                    <h3>Machine Code</h3>
+                    <p>Finally, the <strong>Target Code Generator</strong> converts the optimized code into <strong>Assembly instructions</strong>, ready to be executed.</p>
                 </div>
             </div>
         </section>

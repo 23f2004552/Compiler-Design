@@ -11,6 +11,8 @@ MiniLang Compiler Studio is an interactive, web-based compiler for a toy program
 - Complete Lexer and Parser (Recursive Descent)
 - AST Generation
 - Intermediate Code Generation
+- Code Optimization (Constant Folding)
+- Target Code Generation (Conceptual Assembly)
 - Precise Error Reporting with line/col tracking
 - Beautiful, Modern UI
 
@@ -20,7 +22,7 @@ MiniLang Compiler Studio is an interactive, web-based compiler for a toy program
 3. Visit `http://localhost:5000`
 
 ## Architecture
-Lexer -> Parser (AST) -> Intermediate Code Generator -> JSON -> Frontend UI
+Lexer -> Parser (AST) -> Intermediate Code Generator -> Optimizer -> Target Code Generator -> JSON -> Frontend UI
 
 ## Deploy
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
