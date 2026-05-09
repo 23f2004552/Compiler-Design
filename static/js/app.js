@@ -91,7 +91,7 @@ window.addEventListener("load", function () {
             document.querySelector("#tokens-table tbody").innerHTML = "";
             document.querySelector("#symtable-table tbody").innerHTML = "";
             document.getElementById("ast-output").textContent = "";
-            document.getElementById("tac-output").innerHTML = "";
+            document.getElementById("intermediate-code-output").innerHTML = "";
             document.getElementById("errors-output").innerHTML = "";
             document.getElementById("error-badge").classList.add("hidden");
             document.getElementById("token-stream-banner").classList.add("hidden");
@@ -140,16 +140,16 @@ window.addEventListener("load", function () {
                 document.getElementById("semantic-text").textContent = data.semantics;
             }
 
-            // ── Phase 4: Original TAC ──────────────────────────────────
-            if (data.tac && data.tac.length > 0) {
-                var tacList = document.getElementById("tac-output");
-                data.tac.forEach(function (line) {
+            // ── Phase 4: Intermediate Code ──────────────────────────────────
+            if (data.intermediate_code && data.intermediate_code.length > 0) {
+                var icList = document.getElementById("intermediate-code-output");
+                data.intermediate_code.forEach(function (line) {
                     var li = document.createElement("li");
                     if (line.match(/^L\d+:/)) {
-                        li.className = "tac-label";
+                        li.className = "intermediate-code-label";
                     }
                     li.textContent = line;
-                    tacList.appendChild(li);
+                    icList.appendChild(li);
                 });
             }
 

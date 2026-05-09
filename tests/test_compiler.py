@@ -1,7 +1,7 @@
 import pytest
 from compiler.lexer import tokenize, Token
 from compiler.parser import Parser
-from compiler.codegen import TACGenerator
+from compiler.codegen import IntermediateCodeGenerator
 from compiler.errors import LexicalError, SyntaxError
 
 def test_lexer_valid():
@@ -43,8 +43,8 @@ def test_codegen():
     tokens = tokenize(source)
     parser = Parser(tokens)
     ast = parser.parse()
-    codegen = TACGenerator()
-    tac = codegen.generate(ast)
-    assert len(tac) == 2
-    assert tac[0].startswith("t1 = 5 + 3")
-    assert tac[1] == "x = t1"
+    codegen = IntermediateCodeGenerator()
+    intermediate_code = codegen.generate(ast)
+    assert len(intermediate_code) == 2
+    assert intermediate_code[0].startswith("t1 = 5 + 3")
+    assert intermediate_code[1] == "x = t1"

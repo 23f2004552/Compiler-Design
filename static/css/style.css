@@ -302,18 +302,18 @@ tr:hover td {
     border: 1px solid var(--border-color);
 }
 
-/* TAC Viewer */
-.tac-container ol {
+/* Intermediate Code Viewer */
+.intermediate-code-container ol {
     font-family: var(--font-code);
     padding-left: 0;
     color: var(--text-main);
     list-style-position: inside;
 }
-.tac-container li {
+.intermediate-code-container li {
     padding: 10px 16px;
     border-bottom: 1px solid var(--border-color);
 }
-.tac-container li:hover {
+.intermediate-code-container li:hover {
     background-color: #f8fafc;
 }
 
@@ -407,31 +407,31 @@ code.notation {
     overflow: auto;
 }
 
-/* ── TAC Lines ────────────────────────────────────────────────── */
-.tac-container ol {
+/* ── Intermediate Code Lines ────────────────────────────────────────────────── */
+.intermediate-code-container ol {
     font-family: var(--font-code);
     padding-left: 0;
     list-style: none;
 }
-.tac-container li {
+.intermediate-code-container li {
     padding: 8px 16px;
     border-bottom: 1px solid var(--border-color);
-    counter-increment: tac-counter;
+    counter-increment: intermediate-code-counter;
     display: flex;
     align-items: center;
     gap: 16px;
     font-size: 0.95rem;
 }
-.tac-container li::before {
-    content: counter(tac-counter);
+.intermediate-code-container li::before {
+    content: counter(intermediate-code-counter);
     font-size: 0.8rem;
     color: var(--text-muted);
     min-width: 24px;
     text-align: right;
 }
-.tac-container ol { counter-reset: tac-counter; }
+.intermediate-code-container ol { counter-reset: intermediate-code-counter; }
 
-.tac-container li.tac-label {
+.intermediate-code-container li.intermediate-code-label {
     color: #7c3aed;
     font-weight: 600;
     background: #f5f3ff;

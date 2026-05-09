@@ -4,7 +4,7 @@ from flask_cors import CORS
 from compiler.lexer import tokenize
 from compiler.parser import Parser
 from compiler.semantics import SemanticAnalyzer
-from compiler.codegen import TACGenerator
+from compiler.codegen import IntermediateCodeGenerator
 from compiler.errors import CompilerError
 
 app = Flask(__name__)
@@ -117,7 +117,7 @@ def compile_code():
         "token_stream": "",
         "ast": None,
         "ast_tree": [],
-        "tac": [],
+        "intermediate_code": [],
         "symbol_table": [],
         "errors": [],
         "semantics": "Pending"
@@ -170,9 +170,9 @@ def compile_code():
         response["semantics"] = "All clear! No scope or declaration issues found."
 
         # Phase 4: Intermediate Code Generation
-        codegen = TACGenerator()
-        tac = codegen.generate(ast)
-        response["tac"] = tac
+        codegen = IntermediateCodeGenerator()
+        intermediate_code = codegen.generate(ast)
+        response["intermediate_code"] = intermediate_code
 
     except CompilerError as e:
         response["success"] = False

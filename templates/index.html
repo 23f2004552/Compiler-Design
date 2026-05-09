@@ -55,7 +55,7 @@
                         <button class="tab-btn" data-tab="ast">AST</button>
                         <button class="tab-btn" data-tab="symtable">Symbol Table</button>
                         <button class="tab-btn" data-tab="semantic">Semantic</button>
-                        <button class="tab-btn" data-tab="tac">TAC</button>
+                        <button class="tab-btn" data-tab="intermediate-code">Intermediate Code</button>
                         <button class="tab-btn" data-tab="errors">Errors <span id="error-badge" class="badge hidden">0</span></button>
                     </div>
                 </div>
@@ -98,10 +98,10 @@
                         </div>
                     </div>
 
-                    <!-- TAC Tab -->
-                    <div id="tac-tab" class="tab-pane">
-                        <div class="tac-container">
-                            <ol id="tac-output">
+                    <!-- Intermediate Code Tab -->
+                    <div id="intermediate-code-tab" class="tab-pane">
+                        <div class="intermediate-code-container">
+                            <ol id="intermediate-code-output">
                                 <!-- Populated by JS -->
                             </ol>
                         </div>
@@ -161,7 +161,7 @@
                 <div class="step-card">
                     <div class="step-num">04</div>
                     <h3>Code Generation</h3>
-                    <p>Finally, the <strong>Codegen</strong> produces <strong>Intermediate Code (TAC)</strong>. This is a simplified version of your code that is ready to be turned into machine instructions.</p>
+                    <p>Finally, the <strong>Codegen</strong> produces <strong>Intermediate Code</strong>. This is a simplified version of your code that is ready to be turned into machine instructions.</p>
                 </div>
             </div>
         </section>

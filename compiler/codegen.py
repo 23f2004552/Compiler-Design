@@ -1,4 +1,4 @@
-class TACGenerator:
+class IntermediateCodeGenerator:
     def __init__(self):
         self.instructions = []
         self.temp_count = 0
