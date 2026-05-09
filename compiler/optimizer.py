@@ -79,11 +79,9 @@ class CodeOptimizer:
                     if var in constants: del constants[var]
                 continue
                 
-            match_print = re.match(r"^print\s+([a-zA-Z_]\w*)$", line)
+            match_print = re.match(r"^print\s+(.*)$", line)
             if match_print:
-                var = match_print.group(1)
-                new_var = constants.get(var, var)
-                optimized.append(f"print {new_var}")
+                optimized.append(line)
                 continue
                 
             match_if = re.match(r"^if\s+([a-zA-Z_]\w*)\s+goto\s+(\w+)$", line)
@@ -121,11 +119,9 @@ class CodeOptimizer:
                 if var in copies: del copies[var]
                 continue
                 
-            match_print = re.match(r"^print\s+([a-zA-Z_]\w*)$", line)
+            match_print = re.match(r"^print\s+(.*)$", line)
             if match_print:
-                var = match_print.group(1)
-                new_var = copies.get(var, var)
-                optimized.append(f"print {new_var}")
+                optimized.append(line)
                 continue
                 
             match_if = re.match(r"^if\s+([a-zA-Z_]\w*)\s+goto\s+(\w+)$", line)
