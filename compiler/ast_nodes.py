@@ -34,22 +34,32 @@ class Expression(ASTNode):
 class Assignment(Statement):
     identifier: str
     expression: Expression
+    var_type: Optional[str] = None # 'int', 'float', 'char', 'string', etc. (if explicit)
 
 @dataclass
 class PrintStmt(Statement):
     expression: Expression
 
 @dataclass
-class Condition(ASTNode):
+class Condition(Expression): # make it an expression to support && ||
     left: Expression
     operator: str
     right: Expression
 
 @dataclass
 class Conditional(Statement):
-    condition: Condition
+    condition: Expression
     if_body: List[Statement]
     else_body: Optional[List[Statement]]
+
+@dataclass
+class WhileLoop(Statement):
+    condition: Expression
+    body: List[Statement]
+
+@dataclass
+class Block(Statement):
+    statements: List[Statement]
 
 @dataclass
 class BinOp(Expression):
@@ -60,6 +70,14 @@ class BinOp(Expression):
 @dataclass
 class Number(Expression):
     value: float
+
+@dataclass
+class StringLit(Expression):
+    value: str
+
+@dataclass
+class CharLit(Expression):
+    value: str
 
 @dataclass
 class Identifier(Expression):

@@ -19,10 +19,11 @@ class Token:
     def __repr__(self):
         return f"Token({self.type}, {self.value}, {self.line}, {self.col})"
 
-KEYWORDS = {'let', 'if', 'else', 'print', 'end'}
+KEYWORDS = {'let', 'int', 'float', 'char', 'string', 'if', 'else', 'while', 'for', 'print', 'end'}
 REL_OPS = {'==', '!=', '<=', '>=', '<', '>'}
+LOGICAL_OPS = {'&&', '||'}
 OPS = {'+', '-', '*', '/', '='}
-DELIMS = {'(', ')', '{', '}', ';'}
+DELIMS = {'(', ')', '{', '}', ';', ','}
 
 def tokenize(source_code):
     tokens = []
@@ -35,10 +36,7 @@ def tokenize(source_code):
         char = source_code[i]
         
         if char in ' \t\r':
-            if char == '\t':
-                col += 4
-            else:
-                col += 1
+            col += 4 if char == '\t' else 1
             i += 1
             continue
             
@@ -51,6 +49,54 @@ def tokenize(source_code):
         if char == '/' and i + 1 < n and source_code[i+1] == '/':
             while i < n and source_code[i] != '\n':
                 i += 1
+            continue
+            
+        # String Literals
+        if char == '"':
+            start_i = i
+            start_col = col
+            i += 1
+            col += 1
+            while i < n and source_code[i] != '"':
+                if source_code[i] == '\n':
+                    line += 1
+                    col = 1
+                else:
+                    col += 1
+                i += 1
+            if i >= n:
+                raise LexicalError("Unterminated string literal", line, start_col)
+            val_str = source_code[start_i+1:i]
+            tokens.append(Token('STRING', val_str, line, start_col))
+            i += 1
+            col += 1
+            continue
+            
+        # Char Literals
+        if char == "'":
+            start_i = i
+            start_col = col
+            i += 1
+            col += 1
+            while i < n and source_code[i] != "'":
+                if source_code[i] == '\n':
+                    line += 1
+                    col = 1
+                else:
+                    col += 1
+                i += 1
+            if i >= n:
+                raise LexicalError("Unterminated char literal", line, start_col)
+            val_str = source_code[start_i+1:i]
+            tokens.append(Token('CHAR', val_str, line, start_col))
+            i += 1
+            col += 1
+            continue
+
+        if i + 1 < n and source_code[i:i+2] in LOGICAL_OPS:
+            tokens.append(Token('LOGICAL', source_code[i:i+2], line, col))
+            i += 2
+            col += 2
             continue
 
         if i + 1 < n and source_code[i:i+2] in REL_OPS:

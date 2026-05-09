@@ -31,6 +31,10 @@ class IntermediateCodeGenerator:
         for stmt in node.statements:
             self.visit(stmt)
 
+    def visit_Block(self, node):
+        for stmt in node.statements:
+            self.visit(stmt)
+
     def visit_Assignment(self, node):
         val = self.visit(node.expression)
         self.emit(f"{node.identifier} = {val}")
@@ -63,10 +67,31 @@ class IntermediateCodeGenerator:
         else:
             self.emit(f"{l_end}:")
 
+    def visit_WhileLoop(self, node):
+        l_start = self.new_label()
+        l_body = self.new_label()
+        l_end = self.new_label()
+
+        self.emit(f"{l_start}:")
+        cond_val = self.visit(node.condition)
+        self.emit(f"if {cond_val} goto {l_body}")
+        self.emit(f"goto {l_end}")
+        self.emit(f"{l_body}:")
+        for stmt in node.body:
+            self.visit(stmt)
+        self.emit(f"goto {l_start}")
+        self.emit(f"{l_end}:")
+
     def visit_Condition(self, node):
         left = self.visit(node.left)
         right = self.visit(node.right)
-        return f"{left} {node.operator} {right}"
+        
+        # In simple TAC, logical operators might not be directly supported without short-circuit branches.
+        # But for this simple compiler, we can just emit the full expression string and hope target codegen handles it
+        # or we generate a temp variable. Let's generate a temp variable.
+        temp = self.new_temp()
+        self.emit(f"{temp} = {left} {node.operator} {right}")
+        return temp
 
     def visit_BinOp(self, node):
         left = self.visit(node.left)
@@ -77,6 +102,12 @@ class IntermediateCodeGenerator:
 
     def visit_Number(self, node):
         return str(node.value)
+
+    def visit_StringLit(self, node):
+        return f'"{node.value}"'
+        
+    def visit_CharLit(self, node):
+        return f"'{node.value}'"
 
     def visit_Identifier(self, node):
         return node.name

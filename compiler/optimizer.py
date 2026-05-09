@@ -59,7 +59,7 @@ class CodeOptimizer:
                 optimized.append(line)
                 continue
                 
-            match_op = re.match(r"^(\w+)\s*=\s*([a-zA-Z_]\w*|-?\d+(?:\.\d+)?)\s*([\+\-\*\/])\s*([a-zA-Z_]\w*|-?\d+(?:\.\d+)?)$", line)
+            match_op = re.match(r"^(\w+)\s*=\s*([a-zA-Z_]\w*|-?\d+(?:\.\d+)?)\s*([\+\-\*\/]|==|!=|<=|>=|<|>|&&|\|\|)\s*([a-zA-Z_]\w*|-?\d+(?:\.\d+)?)$", line)
             if match_op:
                 var, left, op, right = match_op.groups()
                 new_left = constants.get(left, left)
@@ -112,7 +112,7 @@ class CodeOptimizer:
                 optimized.append(line)
                 continue
                 
-            match_op = re.match(r"^(\w+)\s*=\s*([a-zA-Z_]\w*|-?\d+)\s*([\+\-\*\/])\s*([a-zA-Z_]\w*|-?\d+)$", line)
+            match_op = re.match(r"^(\w+)\s*=\s*([a-zA-Z_]\w*|-?\d+)\s*([\+\-\*\/]|==|!=|<=|>=|<|>|&&|\|\|)\s*([a-zA-Z_]\w*|-?\d+)$", line)
             if match_op:
                 var, left, op, right = match_op.groups()
                 new_left = copies.get(left, left)
@@ -161,7 +161,7 @@ class CodeOptimizer:
                 optimized.append(line)
                 continue
             
-            match = re.match(r"^(\w+)\s*=\s*([a-zA-Z_]\w*|-?\d+)\s*([\+\-\*\/])\s*([a-zA-Z_]\w*|-?\d+)$", line)
+            match = re.match(r"^(\w+)\s*=\s*([a-zA-Z_]\w*|-?\d+)\s*([\+\-\*\/]|==|!=|<=|>=|<|>|&&|\|\|)\s*([a-zA-Z_]\w*|-?\d+)$", line)
             if match:
                 var, left, op, right = match.groups()
                 expr = f"{left} {op} {right}"
@@ -211,12 +211,9 @@ class CodeOptimizer:
             match_assign = re.match(r"^(\w+)\s*=\s*(.*)$", line)
             if match_assign:
                 var, expr = match_assign.groups()
-                # A variable is dead if it is never used (temp variables starting with 't' are safe to kill if unused)
-                # To be completely safe and generic, any variable not in 'used' set is technically dead
-                # EXCEPT we might want to keep the final output variables. 
-                # For compiler simplicity, if var not in used, we drop it. 
-                # (Unless the user expects variables to persist, but TAC has no side effects)
-                if var not in used:
+                # For loops, variables might be used in previous basic blocks.
+                # Only safely eliminate compiler-generated temporaries (t1, t2, etc.)
+                if var not in used and re.match(r"^t\d+$", var):
                     continue
                 else:
                     for part in expr.split():
