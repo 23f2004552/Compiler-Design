@@ -9,7 +9,7 @@ MiniLang Compiler Studio is an interactive, web-based compiler for a toy program
 
 ## Features
 - Complete Lexer and Parser (Recursive Descent)
-- AST Generation
+- Abstract Syntax Tree(AST) Generation
 - Intermediate Code Generation
 - Code Optimization (Constant Folding)
 - Target Code Generation (Conceptual Assembly)
